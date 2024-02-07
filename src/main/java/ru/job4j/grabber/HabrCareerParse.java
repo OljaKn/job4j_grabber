@@ -30,5 +30,14 @@ public class HabrCareerParse {
                 System.out.printf("%s %s %s%n", vacancyName, link, dataVacancy);
             });
         }
+        /*HabrCareerParse h = new HabrCareerParse();
+        String str = h.retrieveDescription("https://career.habr.com/vacancies/1000137127");
+        System.out.println(str);*/
     }
-}
+
+    private String retrieveDescription(String link) throws IOException {
+            Document document = Jsoup.connect(link).get();
+            Element descriptionElement = document.select(".vacancy-description__text").first();
+            return descriptionElement.text();
+        }
+    }
