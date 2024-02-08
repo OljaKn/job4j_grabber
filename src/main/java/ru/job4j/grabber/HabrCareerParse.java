@@ -44,7 +44,7 @@ public class HabrCareerParse implements Parse {
             String title = titleElement.text();
             String linkPost = String.format("%s%s", SOURCE_LINK, linkElement.attr("href"));
             String description = retrieveDescription(linkPost);
-            LocalDateTime created = dateTimeParser.parse(dataElement.attr("datetime"));
+            LocalDateTime created = dateTimeParser.parse(dataElement.child(0).attr("datetime"));
             return new Post(title, linkPost, description, created);
         }
 
