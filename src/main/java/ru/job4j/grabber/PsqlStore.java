@@ -55,10 +55,7 @@ public class PsqlStore implements Store {
             statement.executeQuery();
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    posts.add(new Post(resultSet.getString("title"),
-                            resultSet.getString("description"),
-                            resultSet.getString("link"),
-                            resultSet.getTimestamp("created").toLocalDateTime()));
+                    posts.add(createPost(resultSet));
                 }
             }
         } catch (Exception e) {
@@ -76,10 +73,7 @@ public class PsqlStore implements Store {
             statement.executeQuery();
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    post = new Post(resultSet.getString("title"),
-                            resultSet.getString("description"),
-                            resultSet.getString("link"),
-                            resultSet.getTimestamp("created").toLocalDateTime());
+                    post = createPost(resultSet);
                 }
             }
         } catch (Exception e) {
@@ -87,6 +81,12 @@ public class PsqlStore implements Store {
         }
         return post;
     }
+     private Post createPost(ResultSet resultSet) throws SQLException {
+        return new Post(resultSet.getString("title"),
+                resultSet.getString("description"),
+                resultSet.getString("link"),
+                resultSet.getTimestamp("created").toLocalDateTime());
+     }
 
     @Override
     public void close() throws Exception {
