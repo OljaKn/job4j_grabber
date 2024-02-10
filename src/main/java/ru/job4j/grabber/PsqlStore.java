@@ -30,11 +30,11 @@ public class PsqlStore implements Store {
     @Override
     public void save(Post post) {
         try (PreparedStatement statement  = connection.prepareStatement(
-                "INSERT INTO post(name, text, link, created) VALUES (?, ?, ?, ?) " + "ON CONFLICT (?) DO NOTHING",
+                "INSERT INTO post(name, text, link, created) VALUES (?, ?, ?, ?) " + "ON CONFLICT (link) DO NOTHING",
                 Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, post.getTitle());
-            statement.setString(2, post.getDescription());
             statement.setString(3, post.getLink());
+            statement.setString(2, post.getDescription());
             statement.setTimestamp(4, Timestamp.valueOf(post.getCreaated()));
             statement.executeUpdate();
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
@@ -82,9 +82,9 @@ public class PsqlStore implements Store {
         return post;
     }
      private Post createPost(ResultSet resultSet) throws SQLException {
-        return new Post(resultSet.getString("title"),
-                resultSet.getString("description"),
+        return new Post(resultSet.getString("name"),
                 resultSet.getString("link"),
+                resultSet.getString("text"),
                 resultSet.getTimestamp("created").toLocalDateTime());
      }
 
